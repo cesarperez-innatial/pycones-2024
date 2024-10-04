@@ -1,0 +1,46 @@
+name: pycones-2024-infrastructure
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.1
+    container_name: pycones-2024-infrastructure-zookeeper
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+    restart: on-failure
+    networks:
+      pycones-2024-infrastructure:
+
+  kafka:
+    image: confluentinc/cp-kafka:7.7.1
+    container_name: pycones-2024-infrastructure-kafka
+    ports:
+      - 9093:9093
+    environment:
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    restart: on-failure
+    networks:
+      pycones-2024-infrastructure:
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: pycones-2024-infrastructure-kafka-ui
+    ports:
+      - 32746:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: PLAINTEXT
+    networks:
+      pycones-2024-infrastructure:
+
+networks:
+  pycones-2024-infrastructure:
+    name: pycones-2024-infrastructure
