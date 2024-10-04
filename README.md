@@ -6,7 +6,7 @@ This repository contains a set of resources to understand the bases of Apache Ka
 
 ### Development environment
 
-Resource to deploy a development environment based in *Docker* --> [Development Environment](infrastructure/README.md)
+Resource to deploy a development environment based in *Docker* --> [Development Environment](infrastructure)
 
 ### Source code (Python)
 
